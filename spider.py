@@ -115,7 +115,7 @@ def fetchAndSave():
     datalist = getData(date_info)
     savepath = "douban" + date_info + ".json"
     saveData(datalist, savepath)
-    pprint.pprint(datalist)
+    print("Fetched count: " + str(len(datalist["data"])))
     print("Saved to " + savepath)
 
 
