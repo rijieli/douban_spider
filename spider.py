@@ -15,12 +15,6 @@ findImaSrc = re.compile(r'<img.*src="(.*?)"', re.S)  # re.S   让换行符包含
 findRating = re.compile(r'<span class="rating_num" property="v:average">(.*)</span>')
 # 找到评价人数
 findJudge = re.compile(r"<span>(\d*)人评价</span>")
-# 找到概况
-findInq = re.compile(r'<span class="inq">(.*)</span>')
-# 找到影片相关内容
-findBd = re.compile(r'<p class="">(.*?)</p>', re.S)
-# 找到影片年份
-findyear = re.compile(r"\d{4}")
 # 找到影片类型
 findcountry = re.compile(r"\d{4}(.*)")
 # 数字
@@ -65,14 +59,16 @@ def getData(date_info):
             number_of_rating = re.findall(findJudge, item)[0]  # 评价人数
             data["number_of_rating"] = number_of_rating
 
-            Inq = re.findall(findInq, item)  # 概述
-            if len(Inq) != 0:
-                Inq = Inq[0].replace("。", "")  # 去掉句号
-                data["introduction"] = Inq.strip()
+            # Find <p class="quote"> inner <span>
+            quote = item_node.find("p", class_="quote")
+            if quote != None:
+                quote = quote.find("span").get_text()
+                data["introduction"] = quote.replace("。", "").strip()
             else:
                 data["introduction"] = ""
 
-            Bd = re.findall(findBd, item)[0]  # 相关内容
+            # Find <div class="bd">
+            Bd = item_node.find("div", class_="bd").get_text()
 
             temp = re.search("[0-9]+.*\/?", Bd).group().split("/")
             year, country, category = temp[0], temp[1], temp[2]  # 得到年份、地区、类型

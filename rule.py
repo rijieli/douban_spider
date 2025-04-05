@@ -10,7 +10,7 @@ def parseTitle(element):
     en_title = ""
 
     # Find all 'a' tags with class '' (empty class in the example)
-    for a_tag in element.find_all("a", class_=""):
+    for a_tag in element.find_all("div", class_="hd"):
         # Find all 'span' with class 'title' within each 'a' tag
         titles = a_tag.find_all("span", class_="title")
         # Extract text and strip it to clean up whitespace
